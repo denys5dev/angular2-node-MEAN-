@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { MessageService } from './message.service';
 import { Message } from './message.model';
+import * as io from "socket.io-client";
 
 @Component({
     selector: 'app-message-list',
@@ -16,15 +17,25 @@ import { Message } from './message.model';
 })
 
 export class MessageListComponent implements OnInit {
-    
+    socket = io.connect();
     messages: Message[];
-    constructor(private messageService: MessageService) {}
-    
+    constructor(private messageService: MessageService) {
+
+    }
+
     ngOnInit() {
-        this.messageService.getMessage()
-            .subscribe(
+        this.socket.on('update', (message) => {
+            this.messageService.getMessage()
+                .subscribe(
                 (messages: Message[]) => {
                     this.messages = messages;
                 });
+        })
+
+        this.messageService.getMessage()
+            .subscribe(
+            (messages: Message[]) => {
+                this.messages = messages;
+            });
     }
 }

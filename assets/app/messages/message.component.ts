@@ -27,7 +27,7 @@ export class MessageComponent {
 //    @Output() editClicked = new EventEmitter<string>();
 
    constructor(private messageService: MessageService) {}
-
+    
    onEdit() {
        this.messageService.editMessage(this.message);
    }

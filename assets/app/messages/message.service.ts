@@ -14,9 +14,9 @@ export class MessageService {
 
     serverEntryPoint: string = 'http://localhost:3000/';
     constructor(private http: Http, private errorService: ErrorService) {
-
+       
     }
-
+    
     addMessage(message: Message) {
         const body = JSON.stringify(message);
         const headers = new Headers({ 'Content-Type': 'application/json' });
@@ -37,6 +37,7 @@ export class MessageService {
                 return Observable.throw(error.json());
             });
     }
+    
 
     getMessage() {
         return this.http.get(this.serverEntryPoint + 'message')
@@ -80,7 +81,7 @@ export class MessageService {
     }
 
     deleteMessage(message: Message) {
-        this.messages.splice(this.messages.indexOf(message), 1));
+        this.messages.splice(this.messages.indexOf(message), 1);
         const token = localStorage.getItem('token')
             ? '?token=' + localStorage.getItem('token')
             : '';

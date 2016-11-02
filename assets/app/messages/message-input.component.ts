@@ -3,6 +3,8 @@ import { NgForm } from "@angular/forms";
 
 import { MessageService } from "./message.service";
 import { Message } from "./message.model";
+import { Observable } from 'rxjs';
+import * as io from "socket.io-client";
 
 @Component({
     selector: 'app-message-input',
@@ -10,10 +12,14 @@ import { Message } from "./message.model";
 })
 export class MessageInputComponent implements OnInit {
     message: Message;
-
-    constructor(private messageService: MessageService) {}
-
+    socket = io.connect();
+    constructor(private messageService: MessageService) {
+       
+    }
+    
+   
     onSubmit(form: NgForm) {
+        
         if (this.message) {
             // Edit
             this.message.content = form.value.content;
@@ -25,6 +31,7 @@ export class MessageInputComponent implements OnInit {
         } else {
             // Create
             const message = new Message(form.value.content, 'Max');
+            this.socket.emit('msg', message);
             this.messageService.addMessage(message)
                 .subscribe(
                     data => console.log(data),
@@ -43,5 +50,6 @@ export class MessageInputComponent implements OnInit {
         this.messageService.messageIsEdit.subscribe(
             (message: Message) => this.message = message
         );
+        
     }
 }
